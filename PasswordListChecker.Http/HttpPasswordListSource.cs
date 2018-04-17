@@ -22,9 +22,10 @@ namespace PasswordListChecker
         public async Task<IEnumerable<string>> FetchAsync()
         {
             using (var client = new HttpClient())
-            using (var sr = new StreamReader(await client.GetStreamAsync(this._uri)))
+            using (var stream = await client.GetStreamAsync(this._uri))
             {
-                return await this._passwordListDeserializer.DeserializeAsync(sr);
+                var passwordListSource = new StreamPasswordListSource(stream, this._passwordListDeserializer);
+                return await passwordListSource.FetchAsync();
             }
         }
     }
