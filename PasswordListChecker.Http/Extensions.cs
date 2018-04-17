@@ -12,7 +12,7 @@ namespace PasswordListChecker
         {
             passwordListDeserializer = passwordListDeserializer ?? new NewLineSeparatedPasswordListDeserializer();
 
-            var source = new HttpPasswordListSource(uri, passwordListDeserializer);
+            var source = new HttpPasswordListSource(uri, stream => new StreamPasswordListSource(stream, passwordListDeserializer));
             builder.AddSource(source);
 
             return builder;
@@ -22,7 +22,39 @@ namespace PasswordListChecker
         {
             passwordListDeserializer = passwordListDeserializer ?? new NewLineSeparatedPasswordListDeserializer();
 
-            var source = new HttpPasswordListSource(uri, passwordListDeserializer);
+            var source = new HttpPasswordListSource(uri, stream => new StreamPasswordListSource(stream, passwordListDeserializer));
+            builder.AddSource(source);
+
+            return builder;
+        }
+
+        public static PasswordListBuilder AddUriCsvSource(this PasswordListBuilder builder, Uri uri, string columnName = null)
+        {
+            var source = new HttpPasswordListSource(uri, stream => new CsvPasswordListSource(stream, columnName));
+            builder.AddSource(source);
+
+            return builder;
+        }
+
+        public static PasswordListBuilder AddUriCsvSource(this PasswordListBuilder builder, string uri, string columnName = null)
+        {
+            var source = new HttpPasswordListSource(uri, stream => new CsvPasswordListSource(stream, columnName));
+            builder.AddSource(source);
+
+            return builder;
+        }
+
+        public static PasswordListBuilder AddUriCsvSource(this PasswordListBuilder builder, Uri uri, int columnNumber)
+        {
+            var source = new HttpPasswordListSource(uri, stream => new CsvPasswordListSource(stream, columnNumber));
+            builder.AddSource(source);
+
+            return builder;
+        }
+
+        public static PasswordListBuilder AddUriCsvSource(this PasswordListBuilder builder, string uri, int columnNumber)
+        {
+            var source = new HttpPasswordListSource(uri, stream => new CsvPasswordListSource(stream, columnNumber));
             builder.AddSource(source);
 
             return builder;
