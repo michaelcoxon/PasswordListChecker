@@ -23,7 +23,7 @@ namespace PasswordListChecker
         /// Fetches the password list asynchronously.
         /// </summary>
         /// <returns></returns>
-        public async Task<PasswordList> FetchAsync()
+        public async Task<IEnumerable<string>> FetchAsync()
         {
             using (var client = new HttpClient())
             using (var stream = await client.GetStreamAsync(this._uri))

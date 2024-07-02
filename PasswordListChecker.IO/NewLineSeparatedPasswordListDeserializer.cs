@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace PasswordListChecker
 {
     public class NewLineSeparatedPasswordListDeserializer : IPasswordListDeserializer
     {
-        public async Task<PasswordList> DeserializeAsync(TextReader textReader)
+        public Task<IEnumerable<string>> DeserializeAsync(TextReader textReader)
+        {
+            return DeserializeAsync2(textReader);
+        }
+
+        private static async Task<IEnumerable<string>> DeserializeAsync1(TextReader textReader)
         {
             var passwordList = new PasswordList();
 
@@ -20,6 +23,13 @@ namespace PasswordListChecker
             }
 
             return passwordList;
+        }
+
+        private static async Task<IEnumerable<string>> DeserializeAsync2(TextReader textReader)
+        {
+            var strList = await textReader.ReadToEndAsync();
+            var result = strList.Split(Environment.NewLine);
+            return result;
         }
     }
 }

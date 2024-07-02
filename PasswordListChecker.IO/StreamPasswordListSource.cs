@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -34,21 +33,15 @@ namespace PasswordListChecker
             this._leaveOpen = leaveOpen;
         }
 
-        public StreamPasswordListSource(string path, IPasswordListDeserializer passwordListDeserializer)
-            : this(File.Open(path, FileMode.Open), passwordListDeserializer)
-        { }
-
         /// <summary>
         /// Fetches the password list asynchronously.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task<PasswordList> FetchAsync()
+        public virtual async Task<IEnumerable<string>> FetchAsync()
         {
-            using (var streamReader = new StreamReader(this._stream, this._encoding, this._detectEncodingFromByteOrderMarks, 4096, this._leaveOpen))
-            {
-                var passwordListSource = new TextReaderPasswordListSource(streamReader, this._passwordListDeserializer);
-                return await passwordListSource.FetchAsync();
-            }
+            using var streamReader = new StreamReader(this._stream, this._encoding, this._detectEncodingFromByteOrderMarks, 4096, this._leaveOpen);
+            var passwordListSource = new TextReaderPasswordListSource(streamReader, this._passwordListDeserializer);
+            return await passwordListSource.FetchAsync();
         }
     }
 }

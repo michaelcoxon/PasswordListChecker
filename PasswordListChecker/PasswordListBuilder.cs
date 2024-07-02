@@ -1,6 +1,7 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
-using System.Text;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace PasswordListChecker
@@ -37,14 +38,14 @@ namespace PasswordListChecker
         /// <returns></returns>
         public async Task<PasswordList> BuildAsync()
         {
-            var passwordList = new PasswordList();
+            var passwordList = new List<string>();
 
             foreach (var source in this._passwordListSources)
             {
                 passwordList.AddRange(await source.FetchAsync());
             }
 
-            return passwordList;
+            return new PasswordList(passwordList);
         }
     }
 }

@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace PasswordListChecker
@@ -17,7 +14,7 @@ namespace PasswordListChecker
 
         public Task<IEnumerable<string>> FetchAsync()
         {
-            return Task.FromResult<IEnumerable<string>>(new PasswordList(this._passwords));
+            return Task.FromResult(this._passwords);
         }
     }
 }

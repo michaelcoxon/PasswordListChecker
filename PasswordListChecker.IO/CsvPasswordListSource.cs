@@ -20,6 +20,7 @@ namespace PasswordListChecker
         private readonly Encoding _encoding;
         private readonly bool _detectEncodingFromByteOrderMarks;
         private readonly bool _leaveOpen;
+        private bool disposedValue;
 
         static CsvPasswordListSource()
         {
@@ -55,23 +56,21 @@ namespace PasswordListChecker
         /// Fetches the password list asynchronously.
         /// </summary>
         /// <returns></returns>
-        public async Task<PasswordList> FetchAsync()
+        public async Task<IEnumerable<string>> FetchAsync()
         {
-            using (var streamReader = new StreamReader(this._stream, this._encoding, this._detectEncodingFromByteOrderMarks, 4096, this._leaveOpen))
+            using var streamReader = new StreamReader(this._stream, this._encoding, this._detectEncodingFromByteOrderMarks, 4096, this._leaveOpen);
+            if (string.IsNullOrEmpty(this._columnName))
             {
-                if (string.IsNullOrEmpty(this._columnName))
-                {
-                    return await FetchByColumnNumberAsync(streamReader, this._columnNumber);
-                }
-                else
-                {
-                    var headers = await streamReader.ReadLineAsync();
-                    var columnNumber = headers.Split(new[] { ',' })
-                        .ToList()
-                        .FindIndex(header => header.Equals(this._columnName, StringComparison.CurrentCultureIgnoreCase));
+                return await FetchByColumnNumberAsync(streamReader, this._columnNumber);
+            }
+            else
+            {
+                var headers = await streamReader.ReadLineAsync();
+                var columnNumber = headers.Split(new[] { ',' })
+                    .ToList()
+                    .FindIndex(header => header.Equals(this._columnName, StringComparison.CurrentCultureIgnoreCase));
 
-                    return await FetchByColumnNumberAsync(streamReader, columnNumber);
-                }
+                return await FetchByColumnNumberAsync(streamReader, columnNumber);
             }
         }
 

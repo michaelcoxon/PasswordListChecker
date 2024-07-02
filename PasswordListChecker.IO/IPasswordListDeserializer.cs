@@ -9,6 +9,6 @@ namespace PasswordListChecker
 {
     public interface IPasswordListDeserializer
     {
-        Task<PasswordList> DeserializeAsync(TextReader textReader);
+        Task<IEnumerable<string>> DeserializeAsync(TextReader textReader);
     }
 }

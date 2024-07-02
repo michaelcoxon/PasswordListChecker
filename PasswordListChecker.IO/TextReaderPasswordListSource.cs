@@ -22,7 +22,7 @@ namespace PasswordListChecker
         /// Fetches the password list asynchronously.
         /// </summary>
         /// <returns></returns>
-        public virtual async Task<PasswordList> FetchAsync()
+        public virtual async Task<IEnumerable<string>> FetchAsync()
         {
             return await this._passwordListDeserializer.DeserializeAsync(this._textReader);
         }
